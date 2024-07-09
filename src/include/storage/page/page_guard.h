@@ -1,7 +1,7 @@
 #pragma once
 
 #include "storage/page/page.h"
-
+#include<memory>
 namespace bustub {
 
 class BufferPoolManager;
@@ -157,18 +157,18 @@ class ReadPageGuard {
    */
   ~ReadPageGuard();
 
-  auto PageId() -> page_id_t { return guard_.PageId(); }
+  auto PageId() -> page_id_t { return guard_->PageId(); }
 
-  auto GetData() -> const char * { return guard_.GetData(); }
+  auto GetData() -> const char * { return guard_->GetData(); }
 
   template <class T>
   auto As() -> const T * {
-    return guard_.As<T>();
+    return guard_->As<T>();
   }
 
- private:
+private:
   // You may choose to get rid of this and add your own private variables.
-  BasicPageGuard guard_;
+  std::unique_ptr<BasicPageGuard> guard_;
 };
 
 class WritePageGuard {
@@ -217,25 +217,25 @@ class WritePageGuard {
    */
   ~WritePageGuard();
 
-  auto PageId() -> page_id_t { return guard_.PageId(); }
+  auto PageId() -> page_id_t { return guard_->PageId(); }
 
-  auto GetData() -> const char * { return guard_.GetData(); }
+  auto GetData() -> const char * { return guard_->GetData(); }
 
   template <class T>
   auto As() -> const T * {
-    return guard_.As<T>();
+    return guard_->As<T>();
   }
 
-  auto GetDataMut() -> char * { return guard_.GetDataMut(); }
+  auto GetDataMut() -> char * { return guard_->GetDataMut(); }
 
   template <class T>
   auto AsMut() -> T * {
-    return guard_.AsMut<T>();
+    return guard_->AsMut<T>();
   }
 
- private:
+private:
   // You may choose to get rid of this and add your own private variables.
-  BasicPageGuard guard_;
+  std::unique_ptr<BasicPageGuard> guard_;
 };
 
 }  // namespace bustub
